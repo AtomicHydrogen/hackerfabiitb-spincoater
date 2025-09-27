@@ -24,8 +24,8 @@ def rpm_counter_thread():
     
     # Configure a list of input pins for the Hall effect sensors
     hall_sensor_pins = [
-        Pin(2, Pin.IN, Pin.PULL_UP)
-        #Pin(3, Pin.IN, Pin.PULL_UP),
+        Pin(2, Pin.IN, Pin.PULL_UP),
+        Pin(3, Pin.IN, Pin.PULL_UP)
         #Pin(4, Pin.IN, Pin.PULL_UP),
         #Pin(5, Pin.IN, Pin.PULL_UP)
     ]
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     DSHOT_SPEED = 150
     
     # --- Initialization ---
-    esc = DShot(DSHOT_PIN, DSHOT_SPEED, frame_rate_hz=100, enable_repeat=True)
+    esc = DShot(DSHOT_PIN, DSHOT_SPEED, frame_rate_hz=500, enable_repeat=True)
     
     # --- Start the second thread ---
     _thread.start_new_thread(rpm_counter_thread, ())
@@ -215,16 +215,16 @@ if __name__ == "__main__":
             print(f"Target RPM: {target_rpm} | Current RPM: {current_rpm}    ", end='\r')
             
             # 4. Implement the throttle ramping logic
-            throttle_value = 100 * temp_ctr
-            if temp_flag == 0:
+            throttle_value = 1000
+            '''if temp_flag == 0:
                 temp_ctr += 1
             else:
                 temp_ctr -= 1
             
-            if temp_ctr >= 20: # Use >= to ensure it triggers
+            if temp_ctr >= 10: # Use >= to ensure it triggers
                 temp_flag = 1
             elif temp_ctr <= 1: # Use <= to ensure it triggers
-                temp_flag = 0
+                temp_flag = 0'''
 
             esc.send_throttle(throttle_value)
 
@@ -238,7 +238,7 @@ if __name__ == "__main__":
                 logfile.write(log_line)
             
             # 6. Set the update rate of the main control loop.
-            time.sleep_ms(50)
+            time.sleep_ms(500)
 
     except KeyboardInterrupt:
         print("\nStopping motor.")
